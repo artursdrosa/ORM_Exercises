@@ -5,7 +5,7 @@ const { read } = require('fs');
 const { Sequelize, DataTypes, where} = require('sequelize'); //npm install --save sequelize , npm install --save mysql2
 const MYSQL_IP="localhost";
 const MYSQL_LOGIN="root";
-const MYSQL_PASSWORD="Computador.10";
+const MYSQL_PASSWORD="1234";
 const DATABASE = "sakila";
 const sequelize = new Sequelize(DATABASE , MYSQL_LOGIN, MYSQL_PASSWORD, {
   host: MYSQL_IP,
