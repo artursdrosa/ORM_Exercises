@@ -32,7 +32,6 @@ async function extractAndInsertData(filePath, sequelize, model) {
     try {
         await sequelize.sync();
 
-        // Foi realizada a leitura e parsing do arquivo CSV
         const csvData = fs.readFileSync(filePath, 'utf8');
         const rows = parse(csvData, { columns: true, skip_empty_lines: true });
 
@@ -57,7 +56,6 @@ async function extractAndInsertData(filePath, sequelize, model) {
 
 async function displayData(model) {
     try {
-        // Foram lidos todos os registros da tabela 'people'
         const people = await model.findAll();
         console.table(people.map(person => person.toJSON()));
     } catch (error) {
@@ -67,7 +65,6 @@ async function displayData(model) {
 
 async function filterByName(nameTerm, model) {
     try {
-        // Foram filtrados os registros onde firstName ou lastName atendem ao critério LIKE %nameTerm%
         const filteredPeople = await model.findAll({
             where: {
                 [Op.or]: [

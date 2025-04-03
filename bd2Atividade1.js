@@ -2,7 +2,7 @@ const { title } = require('process');
 const { Json } = require('sequelize/lib/utils');
 const { parse, resolve } = require('path');
 const { read } = require('fs');
-const { Sequelize, DataTypes, where } = require('sequelize'); //npm install --save sequelize , npm install --save mysql2
+const { Sequelize, DataTypes, where } = require('sequelize');
 
 // project files
 const MYSQL_IP = "localhost";
@@ -133,8 +133,8 @@ async function insertFilm() {
   console.log("Tempo de filme: ", length);
   const replacement_cost = parseFloat(gerarNumAleatorio(19.99, 69.99));
   console.log("Taxa caso perda ou estragar: ", replacement_cost);
-  const rating = "PG"; // definido como valor padrão
-  const special_features = "Trailers"; // definido como valor padrão
+  const rating = "PG";
+  const special_features = "Trailers";
 
   try {
     const film = await Film.create({
@@ -186,10 +186,6 @@ async function insertActorFilm() {
     console.log("Erro ao inserir: ", error);
   }
 }
-
-// =====================================================================
-// Função main adicionada para a interface
-// =====================================================================
 
 async function main() {
   let exit = false;
