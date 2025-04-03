@@ -1,6 +1,6 @@
 const { title } = require('process');
 const { Json } = require('sequelize/lib/utils');
-const { parse } = require('path');
+const { parse, resolve } = require('path');
 const { read } = require('fs');
 const { Sequelize, DataTypes, where} = require('sequelize'); //npm install --save sequelize , npm install --save mysql2
 const MYSQL_IP="localhost";
@@ -155,34 +155,46 @@ async function insertFilm() {
 }
 
 async function insertActorFilm() {
-  try {
-    const actorCount = await Actor.count();
-    const filmCount = await Film.count();
-
-    if (actorCount === 0 || filmCount === 0) {
-      console.log("Erro: Não há atores ou filmes suficientes no banco de dados.");
-      return;
+  async function getValidId(entity, entityName) {
+    let isValid = false;
+    let id;
+    while (!isValid){
+      await new Promise((resolve) => {
+        rl.question(`Digite um ${entityName} _id existente: `, async (inputId) => {
+          id = parseInt(inputId);
+          const count = await entity.count({ where: { [`${entityName}_id`]: id } });
+          if (count > 0) {
+            isValid = true;
+            resolve();
+          } else{
+            console.log(`${entityName}_id não encontrado. Tente novamente.`);
+          }
+        });
+      });
     }
+    return id;
+  }
 
-    const actor_id = Math.floor(gerarNumAleatorio(1, actorCount));
-    const film_id = Math.floor(gerarNumAleatorio(1, filmCount));
+  try{
+    const actor_id = await getValidId(Actor, "actor");
+    const film_id = await getValidId(Film, "film");
 
     const actorFilm = await ActorFilm.create({
       actor_id,
       film_id
     });
-
-    console.log("ID do filme e do ator inseridos com sucesso:\n", JSON.stringify(actorFilm, null, 2));
-  } catch (error) {
-    console.log("Erro ao inserir:", error);
-  } finally {
+    
+    console.log("ID do filme e do ator inserido com sucesso: ", JSON.stringify(actorFilm, null, 2));
+  }catch (error){
+    console.log("Erro ao inserir: ", error);
+  }finally{
     rl.close();
   }
 }
 
-//listActorsFilm();
-//listActor();
-//listFilm();
-//insertActor();
-//insertFilm();
+listActorsFilm();
+listActor();
+listFilm();
+insertActor();
+insertFilm();
 insertActorFilm();
